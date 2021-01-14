@@ -47,14 +47,14 @@ function getImage(artworkURI: string, imageURI: string) {
 const onPressButton = async (feedId: string) => {
   alert(feedId);
   console.log(feedId);
-  let subs = await getMyObject('subscriptions');
+  let subs = await getMyObject('feeds');
   console.log(subs);
   if (subs === null) {
     subs = [];
   }
   if (!subs.includes(feedId)) {
     subs.push(feedId);
-    await setObjectValue('subscriptions', subs);
+    await setObjectValue('feeds', subs);
   }
 };
 
@@ -78,7 +78,7 @@ const getMyObject = async (key: string) => {
   }
 };
 
-export default function SearchResult(props: {podcast: any}) {
+export default function Subscription(props: {podcast: any}) {
   return (
     <View style={styles.row}>
       <Image source={getImage(props.podcast.artwork, props.podcast.image)} />

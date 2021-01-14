@@ -30,10 +30,10 @@ async function processImg(url) {
   await sharp(input)
     .resize(64, 64)
     .toFile(localFilePath)
-    .then((info) => {
+    .then(info => {
       return localFilePath;
     })
-    .catch((err) => {
+    .catch(err => {
       return url;
     });
   return url;
@@ -73,7 +73,7 @@ const opts = {
     },
   },
 };
-fastify.post('/getSubscriptionEpisodes', opts, async (request, reply) => {
+fastify.post('/getFeedEpisodes', opts, async (request, reply) => {
   let episodesArray = [];
   const subs = request.body;
   for (let index = 0; index < subs.length; index++) {
@@ -85,6 +85,17 @@ fastify.post('/getSubscriptionEpisodes', opts, async (request, reply) => {
     .flat()
     .sort((a, b) => a.datePublished < b.datePublished);
   reply.send(sortedEpisodes);
+});
+fastify.post('/getSubscriptionDetails', opts, async (request, reply) => {
+  let subsArray = [];
+  const subs = request.body;
+  for (let index = 0; index < subs.length; index++) {
+    const sub = subs[index];
+    const subscription = await api.episodesByFeedId(sub);
+    subsArray.push(subscription.items);
+  }
+  const subscriptions = subsArray.flat();
+  reply.send(subscriptions);
 });
 fastify.get('/podcastsByFeedUrl/:url', async function (request, reply) {
   const processed = await api.podcastsByFeedUrl(request.params.url);
@@ -110,16 +121,16 @@ fastify.get('/episodesByItunesId/:id', async function (request, reply) {
   const processed = await api.episodesByItunesId(request.params.id);
   reply.send(processed);
 });
-fastify.get(
-  '/recentEpisodes/:number/:exclude)',
-  async function (request, reply) {
-    const processed = await api.recentEpisodes(
-      request.params.number,
-      request.params.exclude,
-    );
-    reply.send(processed);
-  },
-);
+fastify.get('/recentEpisodes/:number/:exclude)', async function (
+  request,
+  reply,
+) {
+  const processed = await api.recentEpisodes(
+    request.params.number,
+    request.params.exclude,
+  );
+  reply.send(processed);
+});
 
 // Run the server!
 fastify.listen(3000, '192.168.1.108', function (err, address) {

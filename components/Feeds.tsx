@@ -2,7 +2,7 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {TextInput, StyleSheet, Image, View, Button} from 'react-native';
 import {Text, TextProps} from './Themed';
-import Subscription from './Subscription';
+import Episode from './Episode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getMyObject = async (key: string) => {
@@ -25,44 +25,41 @@ const setObjectValue = async (key: string, value: any) => {
   }
 };
 
-const renderSubscriptions = async () => {
-  const episodes = await getMyObject('episodes');
-  console.log(episodes);
-  return;
+const refeshFeedEpisodes = async () => {
+  const url = `http://192.168.1.108:3000/getFeedEpisodes`;
+  try {
+    const subs = await getMyObject('subscriptions');
+    console.log(subs);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(subs),
+      mode: 'cors',
+    });
+    const json = await response.json();
+    setObjectValue('episodes', json);
+    console.log(json);
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export default function Feeds() {
-  const [subscriptions, setSubscriptions] = React.useState([]);
-  const refeshSubscriptions = async () => {
-    const url = `http://192.168.1.108:3000/getSubscriptionDetails`;
-    try {
-      const subs = await getMyObject('subscriptions');
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(subs),
-        mode: 'cors',
-      });
-      const json = await response.json();
-      console.log(json);
-      setObjectValue('subscriptions', json);
-      setSubscriptions(json);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  refeshSubscriptions();
+  const [episodes, setEpisodes] = React.useState([]);
+
+  React.useEffect(() => {
+    AsyncStorage.getItem(`@episodes`).then(value => {
+      console.log(value);
+      if (value) {
+        setEpisodes(JSON.parse(value));
+      }
+    });
+  }, []);
   return (
     <View style={styles.container}>
-      {subscriptions !== undefined ? (
-        subscriptions.map((subscription: any) => (
-          <Subscription key={subscription.id} subscription={subscription} />
-        ))
-      ) : (
-        <Text>no subs</Text>
-      )}
+      <Text>test</Text>
     </View>
   );
 }

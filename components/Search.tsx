@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import {TextInput, StyleSheet, Image, View} from 'react-native';
+import {TextInput, StyleSheet, Image, View, ScrollView} from 'react-native';
 import SearchResult from './SearchResult';
 
 export default function Search() {
@@ -26,7 +26,7 @@ export default function Search() {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <TextInput
         inlineImageLeft="search_icon"
         returnKeyType="search"
@@ -43,7 +43,7 @@ export default function Search() {
           ))}
         </View>
       ) : null}
-    </View>
+    </ScrollView>
   );
 }
 
