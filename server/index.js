@@ -77,7 +77,7 @@ fastify.post('/getFeedEpisodes', opts, async (request, reply) => {
   let episodesArray = [];
   const subs = request.body;
   for (let index = 0; index < subs.length; index++) {
-    const sub = subs[index];
+    const sub = subs[index].id;
     const subEpisodes = await api.episodesByFeedId(sub);
     episodesArray.push(subEpisodes.items);
   }
@@ -86,17 +86,7 @@ fastify.post('/getFeedEpisodes', opts, async (request, reply) => {
     .sort((a, b) => a.datePublished < b.datePublished);
   reply.send(sortedEpisodes);
 });
-fastify.post('/getSubscriptionDetails', opts, async (request, reply) => {
-  let subsArray = [];
-  const subs = request.body;
-  for (let index = 0; index < subs.length; index++) {
-    const sub = subs[index];
-    const subscription = await api.episodesByFeedId(sub);
-    subsArray.push(subscription.items);
-  }
-  const subscriptions = subsArray.flat();
-  reply.send(subscriptions);
-});
+
 fastify.get('/podcastsByFeedUrl/:url', async function (request, reply) {
   const processed = await api.podcastsByFeedUrl(request.params.url);
   reply.send(processed);

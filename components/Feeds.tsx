@@ -1,6 +1,13 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {TextInput, StyleSheet, Image, View, Button} from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  Image,
+  View,
+  Button,
+  ScrollView,
+} from 'react-native';
 import {Text, TextProps} from './Themed';
 import Episode from './Episode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,21 +53,37 @@ const refeshFeedEpisodes = async () => {
   }
 };
 
+refeshFeedEpisodes();
+
 export default function Feeds() {
   const [episodes, setEpisodes] = React.useState([]);
 
   React.useEffect(() => {
     AsyncStorage.getItem(`@episodes`).then(value => {
-      console.log(value);
       if (value) {
         setEpisodes(JSON.parse(value));
+      } else {
+        refeshFeedEpisodes();
       }
     });
   }, []);
+  React.useEffect(() => {}, [episodes]);
+
   return (
-    <View style={styles.container}>
-      <Text>test</Text>
-    </View>
+    <ScrollView style={styles.root}>
+      <Button
+        onPress={() => refeshFeedEpisodes()}
+        title="refresh"
+        color="#d8baba"
+      />
+      {episodes !== [] ? (
+        episodes
+          .slice(0, 10)
+          .map((episode: any) => <Episode key={episode.id} episode={episode} />)
+      ) : (
+        <Text>no subs</Text>
+      )}
+    </ScrollView>
   );
 }
 

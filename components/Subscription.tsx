@@ -3,32 +3,6 @@ import {useState} from 'react';
 import {Text, StyleSheet, Image, View, Button, Pressable} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const getImage = async (uri: string) => {
-//   const url = `http://192.168.1.108:3000/img/${uri}`;
-//   try {
-//     let response = await fetch(url);
-//     console.log(response);
-//     let json = await response.json();
-//     const image = {
-//       uri: json.uri,
-//       width: 64,
-//       height: 64,
-//     };
-//     return image;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// function getImageURI(artworkURI: string, imageURI: string) {
-//   let uri = "";
-//   if (artworkURI !== "" && artworkURI !== null) {
-//     uri = artworkURI;
-//   } else if (imageURI !== "" && imageURI !== null) {
-//     uri = imageURI;
-//   }
-//   getImage(uri);
-// }
 function getImage(artworkURI: string, imageURI: string) {
   let uri = '';
   if (imageURI !== '' && imageURI !== null) {
@@ -46,16 +20,6 @@ function getImage(artworkURI: string, imageURI: string) {
 
 const onPressButton = async (feedId: string) => {
   alert(feedId);
-  console.log(feedId);
-  let subs = await getMyObject('feeds');
-  console.log(subs);
-  if (subs === null) {
-    subs = [];
-  }
-  if (!subs.includes(feedId)) {
-    subs.push(feedId);
-    await setObjectValue('feeds', subs);
-  }
 };
 
 const setObjectValue = async (key: string, value: any) => {
@@ -78,19 +42,20 @@ const getMyObject = async (key: string) => {
   }
 };
 
-export default function Subscription(props: {podcast: any}) {
+export default function Subscription(props: {subscription: any}) {
   return (
     <View style={styles.row}>
-      <Image source={getImage(props.podcast.artwork, props.podcast.image)} />
+      <Image
+        source={getImage(props.subscription.artwork, props.subscription.image)}
+      />
       <View style={styles.container}>
-        <Text numberOfLines={1}>{props.podcast.title}</Text>
-        <Text numberOfLines={1}>{props.podcast.author}</Text>
-        <Text numberOfLines={1}>{props.podcast.description}</Text>
+        <Text numberOfLines={1}>{props.subscription.title}</Text>
+        <Text numberOfLines={1}>{props.subscription.author}</Text>
+        <Text numberOfLines={1}>{props.subscription.description}</Text>
       </View>
       <Button
         onPress={async () => {
-          alert(props.podcast.id);
-          onPressButton(props.podcast.id);
+          onPressButton(props.subscription.id);
         }}
         title="ADD THIS"
         color="#000000"

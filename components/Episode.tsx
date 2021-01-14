@@ -49,7 +49,7 @@ export default function Episode(props: {episode: any}) {
         <Text numberOfLines={1}>{props.episode.datePublishedPretty}</Text>
       </View>
       <Button
-        onPress={() => getImage(props.episode.image, props.episode.feedImage)}
+        onPress={() => console.log('dl')}
         title="download"
         color="#d8baba"
       />
@@ -74,6 +74,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
   },
 });

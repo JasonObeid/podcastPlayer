@@ -44,16 +44,26 @@ function getImage(artworkURI: string, imageURI: string) {
   return image;
 }
 
-const onPressButton = async (feedId: string) => {
-  alert(feedId);
-  console.log(feedId);
+function checkIfExists(subs, podId) {
+  subs.forEach(function(sub) {
+    if (sub.id === podId) {
+      return true;
+    }
+  });
+  return false;
+}
+
+const onPressButton = async (podcast: any) => {
   let subs = await getMyObject('subscriptions');
+  console.log(podcast);
   console.log(subs);
   if (subs === null) {
     subs = [];
   }
-  if (!subs.includes(feedId)) {
-    subs.push(feedId);
+  const alreadySubbed = checkIfExists(subs, podcast.id);
+  console.log(!alreadySubbed);
+  if (!alreadySubbed) {
+    subs.push(podcast);
     await setObjectValue('subscriptions', subs);
   }
 };
@@ -62,7 +72,7 @@ const setObjectValue = async (key: string, value: any) => {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem(`@${key}`, jsonValue);
-    console.log(AsyncStorage.setItem(key, jsonValue));
+    console.log(value);
   } catch (e) {
     console.log(e);
   }
@@ -71,8 +81,9 @@ const setObjectValue = async (key: string, value: any) => {
 const getMyObject = async (key: string) => {
   try {
     const jsonValue = await AsyncStorage.getItem(`@${key}`);
-    console.log(await AsyncStorage.getItem(`@${key}`));
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    const value = JSON.parse(jsonValue);
+    console.log(value);
+    return value !== null ? value : null;
   } catch (e) {
     console.log(e);
   }
@@ -88,10 +99,7 @@ export default function SearchResult(props: {podcast: any}) {
         <Text numberOfLines={1}>{props.podcast.description}</Text>
       </View>
       <Button
-        onPress={async () => {
-          alert(props.podcast.id);
-          onPressButton(props.podcast.id);
-        }}
+        onPress={async () => onPressButton(props.podcast)}
         title="ADD THIS"
         color="#000000"
       />
