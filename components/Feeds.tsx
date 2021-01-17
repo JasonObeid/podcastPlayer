@@ -11,6 +11,7 @@ import {
 import {Text, TextProps} from './Themed';
 import Episode from './Episode';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Player from './Player';
 
 const getMyObject = async (key: string) => {
   try {

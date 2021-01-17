@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, Button, View, Image} from 'react-native';
+import {Text, Button, View, Image, StyleSheet} from 'react-native';
 import TrackPlayer, {
   TrackPlayerEvents,
   STATE_PLAYING,
@@ -9,7 +9,7 @@ import {
   useTrackPlayerEvents,
 } from 'react-native-track-player/lib/hooks';
 import Slider from '@react-native-community/slider';
-import styles from './Styles';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const songDetails = {
   id: '1',
@@ -94,42 +94,50 @@ const App = () => {
     setIsSeeking(false);
   };
 
+  const styles = StyleSheet.create({
+    row: {
+      height: 50,
+      flex: 1,
+      flexDirection: 'row',
+      backgroundColor: 'powderblue',
+    },
+    progressBar: {
+      height: 20,
+      paddingBottom: 90,
+    },
+  });
+
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.imageContainer}>
+    <React.Fragment>
+      <Slider
+        style={styles.progressBar}
+        minimumValue={0}
+        maximumValue={1}
+        value={sliderValue}
+        minimumTrackTintColor="#111000"
+        maximumTrackTintColor="#000000"
+        onSlidingStart={slidingStarted}
+        onSlidingComplete={slidingCompleted}
+        thumbTintColor="#000"
+      />
+      <View style={styles.row}>
         <Image
           source={{
             uri: songDetails.artwork,
           }}
           resizeMode="contain"
-          style={styles.albumImage}
+          width={16}
+          height={16}
         />
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.songTitle}>{songDetails.title}</Text>
-        <Text style={styles.artist}>{songDetails.artist}</Text>
-      </View>
-      <View style={styles.controlsContainer}>
-        <Slider
-          style={styles.progressBar}
-          minimumValue={0}
-          maximumValue={1}
-          value={sliderValue}
-          minimumTrackTintColor="#111000"
-          maximumTrackTintColor="#000000"
-          onSlidingStart={slidingStarted}
-          onSlidingComplete={slidingCompleted}
-          thumbTintColor="#000"
-        />
-        <Button
+        <Text>{songDetails.title}</Text>
+        <Icon.Button
           title={isPlaying ? 'Pause' : 'Play'}
           onPress={onButtonPressed}
-          style={styles.playButton}
           disabled={!isTrackPlayerInit}
           color="#000000"
         />
       </View>
-    </View>
+    </React.Fragment>
   );
 };
 

@@ -4,6 +4,7 @@ import {StyleSheet, ScrollView} from 'react-native';
 import {Text, TextProps} from './Themed';
 import Subscription from './Subscription';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Player from './Player';
 
 export default function Feeds() {
   const [subscriptions, setSubscriptions] = React.useState([]);

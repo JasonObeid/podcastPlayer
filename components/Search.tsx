@@ -2,16 +2,11 @@ import * as React from 'react';
 import {useState} from 'react';
 import {TextInput, StyleSheet, Image, View, ScrollView} from 'react-native';
 import SearchResult from './SearchResult';
+import Player from './Player';
 
 export default function Search() {
   const [text, setText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-
-  const logo = {
-    uri: 'https://reactnative.dev/img/tiny_logo.png',
-    width: 64,
-    height: 64,
-  };
 
   const getSearchResults = async (searchText: string) => {
     const url = `http://192.168.1.108:3000/searchByTerm/${searchText}`;
